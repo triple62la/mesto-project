@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Учебный проект `Место` Яндекс Практикум когорта 23 Веб+">
+    <meta name="author" content="Довидов Рахим">
+    <title>Проект Место</title>
+    <link rel="stylesheet" href="./pages/index.css">
+</head>
+<body class="page">
+    <header class="header">
+        <img class="header__logo" src="./images/logo.svg" alt="логотип место">
+    </header>
+    <main class="content">
+        <section class="profile">
+            <img class="profile__avatar" src="./images/q100.jpg" alt="аватар профиля">
+            <div class="profile__info">
+                <div class="profile__name">
+                    <p class="profile__name-text">Жак-Ив Кусто</p>
+                    <button class="profile__edit-btn" type="button"></button>
+                </div>
+                <p class="profile__description">Исследователь океана</p>
+            </div>
+            <button class="profile__add-btn" type="button"></button>
+        </section>
+        <section class="cards-grid">
+            <div class="card">
+                <img class="card__image" src="./images/karachaevsk.jpg" alt="Карачаевск">
+                <div class="card__caption">
+                    <p class="card__title">Карачаевск</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/elbrus.jpg" alt="Эльбрус">
+                <div class="card__caption">
+                    <p class="card__title">Гора Эльбрус</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/dombai.jpg" alt="Карачаевск">
+                <div class="card__caption">
+                    <p class="card__title">Домбай</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/elbrus.jpg" alt="Эльбрус">
+                <div class="card__caption">
+                    <p class="card__title">Гора Эльбрус</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/dombai.jpg" alt="Карачаевск">
+                <div class="card__caption">
+                    <p class="card__title">Домбай</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/karachaevsk.jpg" alt="Карачаевск">
+                <div class="card__caption">
+                    <p class="card__title">Карачаево-Черкессия</p>
+                    <button class="card__like-btn" type="button"></button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <p class="footer__copyright">&copy; 2023 Mesto Russia</p>
+    </footer>
+    <div class="popup">
+        <div class="popup__overlay"></div>
+        <form class="form" action="/" method="post">
+            <h2 class="form__title">Редактировать профиль</h2>
+            <input class="form__input" type="text" name="name-input" id="name-input"  value="Жак-Ив Кусто">
+            <input class="form__input" type="text" name="name-input" id="description-input" value="Исследователь океана">
+            <button class="form__submit-btn" type="submit">Сохранить</button>
+            <button class="form__close-btn" type="button"></button>
+            <script>
+                const closeBtn = document.querySelector(".form__close-btn");
+                const profileEditBtn = document.querySelector(".profile__edit-btn");
+                const popup = document.querySelector(".popup");
+                closeBtn.addEventListener("click", ()=> popup.classList.remove("popup_opened"));
+                profileEditBtn.addEventListener("click", ()=>popup.classList.add("popup_opened"));
+            </script>
+        </form>
+    </div>
+</body>
+</html>
