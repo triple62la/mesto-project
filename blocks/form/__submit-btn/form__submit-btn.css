@@ -7,6 +7,16 @@
     font-weight: 400;
     line-height: 22px;
     cursor: pointer;
+    margin-top: 20px;
+    border-radius: 2px;
+}
+@media screen and (max-width:767px){
+    .form__submit-btn{
+        height: 46px;
+        font-size: 14px;
+        line-height: 17px;
+        margin-top: 14px;
+    }
 }
 .form__submit-btn:hover{
     opacity: 0.8;
