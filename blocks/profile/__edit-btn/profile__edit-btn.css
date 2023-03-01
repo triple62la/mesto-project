@@ -11,6 +11,14 @@
     align-self: end;
     cursor: pointer;
 }
+@media screen and (max-width: 767px){
+    .profile__edit-btn{
+        width: 18px;
+        height: 18px;
+        background-size: 8px 8px;
+    }
+}
+
 .profile__edit-btn:hover{
     opacity: 0.6;
 }
