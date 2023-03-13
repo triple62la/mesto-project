@@ -1,6 +1,16 @@
 .form{
-    width: 100%;
     display: flex;
     flex-direction: column;
     row-gap: 30px;
+    width: 430px;
+    padding: 34px 36px 37px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+}
+@media screen and (max-width:767px){
+    .form{
+        width: 282px;
+        padding: 25px 22px;
+    }
 }

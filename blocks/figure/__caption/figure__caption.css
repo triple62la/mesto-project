@@ -1,0 +1,8 @@
+.figure__caption{
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    color: white;
+    padding-top: 10px;
+}
