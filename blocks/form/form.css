@@ -1,7 +1,7 @@
 .form{
     display: flex;
     flex-direction: column;
-    row-gap: 30px;
+    /*row-gap: 30px;*/
     width: 430px;
     padding: 34px 36px 37px;
     box-sizing: border-box;

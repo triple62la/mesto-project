@@ -52,6 +52,8 @@ function connectCloseListener(closeBtn) {
 
 function openPopup(node) {
     node.classList.add("popup_opened");
+    const form = node.querySelector(".form")
+    renderFormValidation(form)
 }
 
 function closePopup(node) {
@@ -93,6 +95,11 @@ function setPopupFigure(imageUrl, caption) {
 
 addBtn.addEventListener("click", () => openPopup(addForm));
 
+function connectAllListeners(cardNode) {
+    connectLikeListener(cardNode);
+    connectDelListener(cardNode);
+    connectImageListener(cardNode);
+}
 
 function createNewCard(title, url, addListeners = true) {
     const newCard = cardTemplate.content.cloneNode(true);
@@ -136,12 +143,57 @@ function connectImageListener(cardNode) {
     })
 }
 
-function connectAllListeners(cardNode) {
-    connectLikeListener(cardNode);
-    connectDelListener(cardNode);
-    connectImageListener(cardNode);
+function hasInvalidInput(form){
+    return [...form.querySelectorAll(".form__input")].some((input)=>{
+        return !input.validity.valid
+    })
+}
+
+function renderFormValidation(form){
+    const inputLIst = [...form.querySelectorAll(".form__input")]
+    const formisValid = !hasInvalidInput(form)
+    const btn = form.querySelector(".form__submit-btn")
+    inputLIst.map((input)=>{
+        const msg = formisValid ? "": input.validationMessage
+        setInputError(form, input, msg)
+    })
+    btnSetDisabled(btn, !formisValid)
+}
+
+function connectValidationListeners(){
+    for (const form of [...document.querySelectorAll(".form")]){
+
+        for (const input of [...form.querySelectorAll(".form__input")]){
+
+            input.addEventListener("input", (evt)=>{
+                const form = evt.target.closest(".form")
+                renderFormValidation(form)
+            })
+        }
+    }
+}
+
+function setInputError(form, input, msg){
+
+    const errorSpan = form.querySelector(`.form__error_type_${input.id}`)
+    errorSpan.innerText = msg
+    if (msg){
+        input.classList.add("form__input_invalid")
+    } else {
+        input.classList.remove("form__input_invalid")
+    }
+}
+
+function btnSetDisabled(btn, state){
+    if (state) {
+        btn.classList.add("form__submit-btn_disabled")
+    } else {
+        btn.classList.remove("form__submit-btn_disabled")
+    }
 }
 
 
+
+connectValidationListeners()
 onloadCreateCards(initialCards);
 
