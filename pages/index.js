@@ -48,23 +48,38 @@ function connectCloseListener(closeBtn) {
 
 }
 
-[...document.querySelectorAll(".popup__close-btn")].map((btn) => connectCloseListener(btn));
-
 function openPopup(node) {
     node.classList.add("popup_opened");
+    node.addEventListener("click", overlayOnClick)
+    document.addEventListener("keydown", onEscCloseOverlay)
     const form = node.querySelector(".form")
-    renderFormValidation(form)
+    if (form){
+        resetValidationErrors(form)
+        form.reset()
+    }
 }
 
 function closePopup(node) {
     node.classList.remove("popup_opened");
-
+    node.removeEventListener("click", overlayOnClick)
+    document.removeEventListener("keydown", onEscCloseOverlay)
+}
+function overlayOnClick(evt){
+    if (evt.target === evt.currentTarget){
+        closePopup(evt.target)
+    }
+}
+function onEscCloseOverlay(evt){
+    if (evt.key==="Escape"){
+        closePopup(document.querySelector(".popup_opened"))
+    }
 }
 
 const openEditForm = () => {
+    openPopup(editForm)
     nameInput.value = profileName.innerText;
     descriptionInput.value = profileDescription.innerText;
-    openPopup(editForm)
+
 };
 
 editBtn.addEventListener("click", () => openEditForm());
@@ -149,25 +164,33 @@ function hasInvalidInput(form){
     })
 }
 
-function renderFormValidation(form){
-    const inputLIst = [...form.querySelectorAll(".form__input")]
+function resetValidationErrors(form){
+    const errors = [...form.querySelectorAll(".form__error")]
+    const inputs = [...form.querySelectorAll(".form__input")]
+    errors.map(error=>error.innerText="")
+    inputs.map(input=>input.classList.remove("form__input_invalid"))
+    const state = form.name === "add-place"
+    btnSetDisabled(form.querySelector(".form__submit-btn"), state)
+}
+
+function renderValidation(input, form){
+
+    const  msg = input.validity.patternMismatch? input.dataset.errorMessage: input.validationMessage;
     const formisValid = !hasInvalidInput(form)
     const btn = form.querySelector(".form__submit-btn")
-    inputLIst.map((input)=>{
-        const msg = formisValid ? "": input.validationMessage
-        setInputError(form, input, msg)
-    })
+    setInputError(form, input, msg)
     btnSetDisabled(btn, !formisValid)
 }
 
 function connectValidationListeners(){
+
     for (const form of [...document.querySelectorAll(".form")]){
 
         for (const input of [...form.querySelectorAll(".form__input")]){
 
             input.addEventListener("input", (evt)=>{
                 const form = evt.target.closest(".form")
-                renderFormValidation(form)
+                renderValidation(input, form)
             })
         }
     }
@@ -194,6 +217,7 @@ function btnSetDisabled(btn, state){
 
 
 
+[...document.querySelectorAll(".popup__close-btn")].map((btn) => connectCloseListener(btn));
 connectValidationListeners()
 onloadCreateCards(initialCards);
 
