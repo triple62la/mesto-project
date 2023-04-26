@@ -6,15 +6,14 @@
     <meta name="description" content="Учебный проект `Место` Яндекс Практикум когорта 23 Веб+">
     <meta name="author" content="Довидов Рахим">
     <title>Проект Место</title>
-    <link rel="stylesheet" href="./pages/index.css">
 </head>
 <body class="page">
 <header class="header">
-    <img class="header__logo" src="./images/logo.svg" alt="логотип место">
+    <img class="header__logo" src="<%=require('./images/logo.svg')%>" alt="логотип место">
 </header>
 <main class="content">
     <section class="profile">
-        <img class="profile__avatar" src="./images/q100.jpg" alt="аватар профиля">
+        <img class="profile__avatar" src="<%=require('./images/q100.jpg')%>" alt="аватар профиля">
         <div class="profile__info">
             <div class="profile__name">
                 <h1 class="profile__name-text">Жак-Ив Кусто</h1>
@@ -82,9 +81,9 @@
         </div>
     </div>
 </template>
-<script type="module" src="components/utils.js"></script>
-<script type="module" src="components/modal.js"></script>
-<script type="module" src="components/card.js"></script>
-<script type="module" src="components/index.js"></script>
+<!--<script type="module" src="components/utils.js"></script>-->
+<!--<script type="module" src="components/modal.js"></script>-->
+<!--<script type="module" src="components/card.js"></script>-->
+<!--<script type="module" src="index.js"></script>-->
 </body>
 </html>

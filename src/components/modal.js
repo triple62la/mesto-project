@@ -10,7 +10,7 @@ import {
     profileName
 } from "./utils.js";
 
-import {resetValidationErrors} from "./validation.js";
+import {resetValidationErrors, cssClasses} from "./validation.js";
 
 import {createNewCard} from "./card.js";
 
@@ -20,7 +20,7 @@ function openPopup(node) {
     document.addEventListener("keydown", onEscCloseOverlay)
     const form = node.querySelector(".form")
     if (form) {
-        resetValidationErrors(form)
+        resetValidationErrors(form, cssClasses)
         form.reset()
     }
 }

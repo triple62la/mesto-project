@@ -4,3 +4,4 @@
 .idea/.gitignore
 node_modules
 dist
+.idea

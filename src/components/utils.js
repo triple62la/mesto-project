@@ -1,3 +1,6 @@
+
+
+
 export const profileName = document.querySelector(".profile__name-text");
 export const profileDescription = document.querySelector(".profile__description");
 export const nameInput = document.querySelector("#name-input");
@@ -14,3 +17,4 @@ export const cardsGrid = document.querySelector(".cards-grid");
 export const figureImage = imagePopup.querySelector(".figure__image");
 export const figureCaption = imagePopup.querySelector(".figure__caption");
 export const popupCloseBtns = [...document.querySelectorAll(".popup__close-btn")]
+export const forms = [...document.forms]

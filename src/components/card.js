@@ -1,10 +1,12 @@
 import {cardsGrid, cardTemplate, imagePopup} from "./utils.js";
 import {openPopup, setPopupFigure} from "./modal.js";
+import spclforvlad from "../images/spclforvlad.gif"
+
 
 const initialCards = [
     {
         name: 'До Байкала на собаках',
-        link: './images/spclforvlad.gif'
+        link: spclforvlad
     },
     {
         name: 'Челябинская область',
