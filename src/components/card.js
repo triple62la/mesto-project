@@ -1,34 +1,6 @@
-import {cardsGrid, cardTemplate, imagePopup} from "./utils.js";
-import {openPopup, setPopupFigure} from "./modal.js";
-import spclforvlad from "../images/spclforvlad.gif"
+import {cardTemplate, figureCaption, figureImage, imagePopup} from "./utils.js";
+import {openPopup} from "./modal.js";
 
-
-const initialCards = [
-    {
-        name: 'До Байкала на собаках',
-        link: spclforvlad
-    },
-    {
-        name: 'Челябинская область',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-    },
-    {
-        name: 'Иваново',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-        name: 'Камчатка',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-    },
-    {
-        name: 'Холмогорский район',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-    },
-    {
-        name: 'Байкал',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-    }
-];
 
 function createNewCard(title, url, addListeners = true) {
     const newCard = cardTemplate.content.cloneNode(true);
@@ -37,16 +9,13 @@ function createNewCard(title, url, addListeners = true) {
     image.alt = "Изображение для " + title;
     newCard.querySelector(".card__title").innerText = title;
     if (addListeners) {
-        connectAllListeners(newCard);
+        connectLikeListener(newCard);
+        connectDelListener(newCard);
+        connectImageListener(newCard, url, title);
     }
     return newCard
 }
 
-function connectAllListeners(cardNode) {
-    connectLikeListener(cardNode);
-    connectDelListener(cardNode);
-    connectImageListener(cardNode);
-}
 
 function connectLikeListener(cardNode) {
     cardNode.querySelector(".card__like-btn").addEventListener("click", (ev) => {
@@ -60,19 +29,16 @@ function connectDelListener(cardNode) {
     })
 }
 
-function connectImageListener(cardNode) {
+function connectImageListener(cardNode, imageUrl, caption) {
     cardNode.querySelector(".card__image").addEventListener("click", (ev) => {
-        const caption = ev.currentTarget.closest(".card").querySelector(".card__caption").innerText;
-        const imageUrl = ev.currentTarget.src;
-        setPopupFigure(imageUrl, caption);
+        // const caption = ev.currentTarget.closest(".card").querySelector(".card__caption").innerText;
+        // const imageUrl = ev.currentTarget.src;
+        figureImage.src = imageUrl;
+        figureImage.alt = caption;
+        figureCaption.innerText = caption;
         openPopup(imagePopup);
     })
 }
-function onloadCreateCards(cardsArray) {
-    for (const card of cardsArray) {
-        const cardNode = createNewCard(card.name, card.link, true);
-        cardsGrid.append(cardNode);
-    }
-}
 
-export {initialCards, createNewCard, connectAllListeners, onloadCreateCards}
+
+export {createNewCard}

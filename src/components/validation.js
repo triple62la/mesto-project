@@ -17,13 +17,12 @@ function hasInvalidInput(form, classes) {
 }
 
 function resetValidationErrors(form, classes) {
-    const errors = [...form.querySelectorAll("." + classes.errorSpanClass)]
+    const errors = [...form.querySelectorAll("." + classes.errorSpan)]
     const inputs = [...form.querySelectorAll("." + classes.input)]
     const btn = form.querySelector("."+classes.submitButton)
     errors.map(error => error.innerText = "")
     inputs.map(input => input.classList.remove(classes.invalidInput))
-    const state = form.name === "add-place"
-    btnSetDisabled(btn, state, classes)
+
 }
 
 function renderValidation(input, form, classes) {
@@ -68,4 +67,4 @@ function btnSetDisabled(btn, state, classes) {
     }
 }
 
-export {resetValidationErrors, enableValidation}
+export {resetValidationErrors, enableValidation, btnSetDisabled}
