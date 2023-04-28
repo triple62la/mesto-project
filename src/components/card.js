@@ -2,7 +2,7 @@ import {cardTemplate, figureCaption, figureImage, imagePopup} from "./utils.js";
 import {openPopup} from "./modal.js";
 
 
-function createNewCard(title, url, addListeners = true) {
+function createNewCard(title, url, addListeners = true, trash = true) {
     const newCard = cardTemplate.content.cloneNode(true);
     const image = newCard.querySelector(".card__image");
     image.src = url;
@@ -13,6 +13,7 @@ function createNewCard(title, url, addListeners = true) {
         connectDelListener(newCard);
         connectImageListener(newCard, url, title);
     }
+    if (!trash){newCard.querySelector(".card__delete-btn").remove()}
     return newCard
 }
 

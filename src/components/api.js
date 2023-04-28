@@ -3,7 +3,7 @@
 const config  = {
     authToken : "77cf61ee-9369-4f48-993e-65ce51ba58da",
     groupId : "plus-cohort-23",
-    baseUrl: "https://nomoreparties.co/v1/" + this.groupId
+    get baseUrl(){ return "https://nomoreparties.co/v1/" +this.groupId }
 }
 
 async function request(method, route, payload=null) {

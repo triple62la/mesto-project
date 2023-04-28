@@ -16,53 +16,95 @@ import {
     profileName
 } from "./components/utils";
 import initialCards from "./components/cards";
+import {addNewCard, getCards, getUserInfo, setUserInfo} from "./components/api";
 
-function onloadCreateCards(cardsArray) {
+
+let CARDS; //храним массив с карточками
+
+
+function loadResources(){
+    return Promise.all([getUserInfo(), getCards()])
+}
+
+
+function onloadCreateCards(cardsArray, userID) {
     for (const card of cardsArray) {
-        const cardNode = createNewCard(card.name, card.link, true);
+        const trash = userID === card?.owner?.["_id"] ?? false
+        const cardNode = createNewCard(card.name, card.link, true, trash);
         cardsGrid.append(cardNode);
     }
 }
 
-popupCloseBtns.map((btn) => btn.addEventListener("click", () => {
-    const popup = btn.closest(".popup")
-    closePopup(popup)
+function connectListeners(){
+    popupCloseBtns.map((btn) => btn.addEventListener("click", () => {
+        const popup = btn.closest(".popup")
+        closePopup(popup)
 
-}));
+    }));
 
-editBtn.addEventListener("click", () => {
-    nameInput.value = profileName.innerText;
-    descriptionInput.value = profileDescription.innerText;
-    resetValidationErrors(editForm, cssClasses)
-    btnSetDisabled(editSubmtBtn, false, cssClasses)
-    openPopup(editPopup)
-});
+    editBtn.addEventListener("click", () => {
 
-editPopup.addEventListener("submit", (evnt) => {
-    evnt.preventDefault();
-    profileName.innerText = nameInput.value;
-    profileDescription.innerText = descriptionInput.value;
-    closePopup(editPopup);
-});
+        nameInput.value = profileName.innerText;
+        descriptionInput.value = profileDescription.innerText;
+        resetValidationErrors(editForm, cssClasses)
+        btnSetDisabled(editSubmtBtn, false, cssClasses)
+        openPopup(editPopup)
+    });
 
-addPopup.addEventListener("submit", (evnt) => {
-    evnt.preventDefault();
-    const cardNode = createNewCard(placeTitle.value, imageUrl.value);
-    cardsGrid.prepend(cardNode);
-    addForm.reset()
-});
+    editPopup.addEventListener("submit", (evnt) => {
+        evnt.preventDefault();
+        const name = nameInput.value
+        const about = descriptionInput.value
+        editSubmtBtn.innerText = "Сохранение..."
+        setUserInfo(name, about)
+            .then(()=>{
+                renderUserInfo(name, about)
+                editSubmtBtn.innerText = "Сохранить"
+                closePopup(editPopup);
+            })
+            .catch((reason)=>{
+                console.error(reason)
+                editSubmtBtn.innerText = "Сохранить"
+            })
+    });
+
+    addPopup.addEventListener("submit", (evnt) => {
+        evnt.preventDefault();
+        const [name, link] = [placeTitle.value, imageUrl.value]
+        addNewCard(name, link)
+            .then(()=>{
+                const cardNode = createNewCard(name, link, true, true);
+                cardsGrid.prepend(cardNode);
+                addForm.reset()
+            })
+            .catch(reason=>{
+                console.error(reason)
+            })
+    });
 
 
-addBtn.addEventListener("click", () => {
+    addBtn.addEventListener("click", () => {
 
-    addForm.reset()
-    resetValidationErrors(addPopup, cssClasses)
-    btnSetDisabled(addSbmtBtn, true, cssClasses)
-    openPopup(addPopup)
+        addForm.reset()
+        resetValidationErrors(addPopup, cssClasses)
+        btnSetDisabled(addSbmtBtn, true, cssClasses)
+        openPopup(addPopup)
 
-});
+    });
+}
+function renderUserInfo(name, about){
+    profileName.innerText = name;
+    profileDescription.innerText = about;
+}
 
 
-enableValidation(cssClasses)
-onloadCreateCards(initialCards);
 
+// onloadCreateCards(initialCards);
+
+loadResources().then((results)=>{
+    const [userInfo, cardsArray] = results
+    onloadCreateCards(cardsArray, userInfo["_id"])
+    renderUserInfo(userInfo.name, userInfo.about)
+    connectListeners()
+    enableValidation(cssClasses)
+})
