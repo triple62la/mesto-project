@@ -18,3 +18,7 @@ export const figureImage = imagePopup.querySelector(".figure__image");
 export const figureCaption = imagePopup.querySelector(".figure__caption");
 export const popupCloseBtns = [...document.querySelectorAll(".popup__close-btn")]
 export const forms = [...document.forms]
+export const addForm = addPopup.querySelector(".form")
+export const editForm = editPopup.querySelector(".form")
+export const editSubmtBtn = editForm.querySelector(".form__submit-btn")
+export const addSbmtBtn = addForm.querySelector(".form__submit-btn")
