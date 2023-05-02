@@ -7,15 +7,24 @@ import './pages/index.css';
 import {
     addBtn, addForm,
     addPopup, addSbmtBtn, avatarForm, avatarImage, avatarInput, avatarModal, avatarOverlay, avatarSbmtBtn,
-    cardsGrid,
+    cardsGrid, confirmAcceptBtn, confirmDeclineBtn, confirmForm, confirmModal, confirmModalCloseBtn,
     descriptionInput,
     editBtn, editForm,
-    editPopup, editSubmtBtn, imageUrl,
+    editPopup, editSubmtBtn, figureCaption, figureImage, imagePopup, imageUrl,
     nameInput, placeTitle, popupCloseBtns,
     profileDescription,
     profileName
 } from "./components/utils";
-import {addNewCard, getCards, getUserInfo, setUserInfo, updateAvatar} from "./components/api";
+import {
+    addNewCard,
+    deleteCard,
+    getCards,
+    getUserInfo,
+    putCardLike,
+    rmvCardLike,
+    setUserInfo,
+    updateAvatar
+} from "./components/api";
 
 
 
@@ -30,6 +39,8 @@ function onloadCreateCards(cardsArray, userID) {
         const liked = isLikedByUser(card, userID)
         const cardNode = createNewCard( card,{ trash, liked} );
         cardsGrid.append(cardNode);
+        connectCardListeners(cardNode, card.link, card.name)
+
     }
 }
 
@@ -83,6 +94,7 @@ function connectListeners(){
             .then((response)=>{
                 console.log(response)
                 const cardNode = createNewCard(response, {trash : true, liked: false});
+                connectCardListeners(cardNode, link, name)
                 cardsGrid.prepend(cardNode);
                 addSbmtBtn.innerText = "Создать"
                 addForm.reset()
@@ -120,19 +132,102 @@ function connectListeners(){
             })
     })
 }
-function renderUserInfo(name, about){
+function renderUserInfo(name, about, avatar){
     profileName.innerText = name;
     profileDescription.innerText = about;
+    avatarImage.src = avatar
 }
 
+function delBtnClick(evt){
+
+}
+
+
+function connectLikeListener(cardNode) {
+    cardNode.querySelector(".card__like-btn").addEventListener("click", (ev) => {
+        const btn = cardNode.querySelector(".card__like-btn")
+        const cardId = cardNode.dataset.cardId
+        const likeSpan = cardNode.querySelector(".card__like-counter")
+        if (btn.classList.contains("card__like-btn_active")) {
+            rmvCardLike(cardId)
+                .then((response) => {
+                    btn.classList.remove("card__like-btn_active")
+                    likeSpan.innerText = response.likes.length
+                })
+                .catch(reason => console.error(reason))
+        } else {
+            putCardLike(cardId)
+                .then((response) => {
+                    btn.classList.add("card__like-btn_active")
+                    likeSpan.innerText = response.likes.length
+                })
+                .catch(reason => console.error(reason))
+        }
+
+    })
+}
+
+function connectDelListener(cardNode) {
+    const delBtn = cardNode.querySelector(".card__delete-btn")
+    if (!delBtn) return
+
+    delBtn.addEventListener("click", (ev) => {
+        openPopup(confirmModal)
+        //создаем акцептующий промис
+        const accept = new Promise((resolve)=>confirmForm.addEventListener("submit",(evt)=> {
+            evt.preventDefault()
+            closePopup(confirmModal)
+            resolve(true)
+        }))
+        //создаем отклоняющий промис:
+        const decline = new Promise((resolve)=>confirmModalCloseBtn.addEventListener("click", ()=>resolve(false)))
+        Promise.race([accept,decline])
+            .then(value=>{
+                if (value){ //если выиграл акцептующий
+                    deleteCard(cardNode.dataset.cardId)
+                        .then(()=>cardNode.remove())
+                        .catch(reason => console.error(reason))
+                }
+            })
+    })
+}
+
+function connectImageListener(cardNode, imageUrl, caption) {
+    cardNode.querySelector(".card__image").addEventListener("click", (ev) => {
+        // const caption = ev.currentTarget.closest(".card").querySelector(".card__caption").innerText;
+        // const imageUrl = ev.currentTarget.src;
+        figureImage.src = imageUrl;
+        figureImage.alt = caption;
+        figureCaption.innerText = caption;
+        openPopup(imagePopup);
+    })
+}
+
+function connectCardListeners(cardNode, imageUrl, title){
+    connectLikeListener(cardNode)
+    connectDelListener(cardNode)
+    connectImageListener(cardNode, imageUrl, title)
+}
+
+document.addEventListener("keydown", (evt)=>{
+    if (evt.key === "v"){
+        const accept = new Promise((resolve)=>confirmForm.addEventListener("submit",(evt)=> {
+            evt.preventDefault()
+            resolve("Принято")
+        }))
+        const decline = new Promise((resolve)=>confirmModalCloseBtn.addEventListener("click", ()=>resolve("Отменено")))
+        openPopup(confirmModal)
+        Promise.race([accept,decline])
+            .then(value=>console.log(value))
+    }
+})
 
 loadResources()
     .then((results)=>{
     const [userInfo, cardsArray] = results
-    avatarImage.src = userInfo.avatar
     onloadCreateCards(cardsArray, userInfo["_id"])
-    renderUserInfo(userInfo.name, userInfo.about)
+    renderUserInfo(userInfo.name, userInfo.about, userInfo.avatar)
     connectListeners()
     enableValidation(cssClasses)
 })
-    .catch(()=>console.error("Ошибка загрузки ресурсов с сервера"))
+    .catch((reason)=>console.error("Ошибка загрузки ресурсов с сервера", reason))

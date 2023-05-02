@@ -4,7 +4,7 @@ import {deleteCard, putCardLike, rmvCardLike} from "./api";
 import {resetValidationErrors} from "./validation";
 
 
-function createNewCard(cardObject, options = {addListeners: true, trash: true, liked: false}) {
+function createNewCard(cardObject, options =  {trash: true, liked: false}) {
     const {name, link, likes, _id} = cardObject
     const newCard = cardTemplate.content
         .cloneNode(true)
@@ -18,11 +18,6 @@ function createNewCard(cardObject, options = {addListeners: true, trash: true, l
     image.alt = "Изображение для " + name;
     newCard.querySelector(".card__title").innerText = name;
     newCard.dataset.cardId = _id
-
-    connectLikeListener(newCard);
-    connectDelListener(newCard);
-    connectImageListener(newCard, link, name);
-
     if (!options.trash) {
         newCard.querySelector(".card__delete-btn").remove()
     }
@@ -30,48 +25,6 @@ function createNewCard(cardObject, options = {addListeners: true, trash: true, l
 }
 
 
-function connectLikeListener(cardNode) {
-    cardNode.querySelector(".card__like-btn").addEventListener("click", (ev) => {
-        const btn = cardNode.querySelector(".card__like-btn")
-        const cardId = cardNode.dataset.cardId
-        const likeSpan = cardNode.querySelector(".card__like-counter")
-        if (btn.classList.contains("card__like-btn_active")) {
-            rmvCardLike(cardId)
-                .then((response) => {
-                    btn.classList.remove("card__like-btn_active")
-                    likeSpan.innerText = response.likes.length
-                })
-                .catch(reason => console.error(reason))
-        } else {
-            putCardLike(cardId)
-                .then((response) => {
-                    btn.classList.add("card__like-btn_active")
-                    likeSpan.innerText = response.likes.length
-                })
-                .catch(reason => console.error(reason))
-        }
-
-    })
-}
-
-function connectDelListener(cardNode) {
-    cardNode.querySelector(".card__delete-btn").addEventListener("click", (ev) => {
-        deleteCard(cardNode.dataset.cardId)
-            .then(()=>cardNode.remove())
-            .catch(reason => console.error(reason))
-    })
-}
-
-function connectImageListener(cardNode, imageUrl, caption) {
-    cardNode.querySelector(".card__image").addEventListener("click", (ev) => {
-        // const caption = ev.currentTarget.closest(".card").querySelector(".card__caption").innerText;
-        // const imageUrl = ev.currentTarget.src;
-        figureImage.src = imageUrl;
-        figureImage.alt = caption;
-        figureCaption.innerText = caption;
-        openPopup(imagePopup);
-    })
-}
 
 
 export {createNewCard}
