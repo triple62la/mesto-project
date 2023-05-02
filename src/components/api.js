@@ -53,4 +53,19 @@ function addNewCard(name, link){
     return request("POST", "/cards", {name, link})
 
 }
-export {getUserInfo, getCards, setUserInfo, addNewCard}
+function deleteCard(cardId){
+    return request("DELETE", `/cards/${cardId}`)
+}
+
+function putCardLike(cardId){
+    return request("PUT", `/cards/likes/${cardId}`)
+}
+function rmvCardLike(cardId){
+    return request("DELETE", `/cards/likes/${cardId}`)
+}
+function updateAvatar(avatar){
+    return request("PATCH","/users/me/avatar", {avatar})
+}
+
+
+export {getUserInfo, getCards, setUserInfo, addNewCard, putCardLike, rmvCardLike, deleteCard, updateAvatar}

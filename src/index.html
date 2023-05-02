@@ -13,7 +13,11 @@
 </header>
 <main class="content">
     <section class="profile">
-        <img class="profile__avatar" src="<%=require('./images/q100.jpg')%>" alt="аватар профиля">
+        <div class="profile__avatar-container">
+            <div class="profile__avatar-overlay"></div>
+            <img class="profile__avatar-img" src="<%=require('./images/q100.jpg')%>" alt="аватар профиля">
+        </div>
+
         <div class="profile__info">
             <div class="profile__name">
                 <h1 class="profile__name-text"></h1>
@@ -49,7 +53,7 @@
 <div class="popup popup_type_add">
     <div class="popup__container">
         <button aria-label="Закрыть" class="popup__close-btn" type="button"></button>
-        <form class="form" action="/" method="post" name="add-place">
+        <form class="form" action="/" method="post" name="add-place" novalidate>
             <h2 class="form__title">Новое место</h2>
             <input class="form__input" type="text" name="place-title" id="place-title" value="" placeholder="Название"
                    required minlength="2" maxlength="30" pattern="[a-zA-Zа-яА-ЯёЁ -]+"
@@ -62,6 +66,19 @@
         </form>
     </div>
 </div>
+<div class="popup popup_type_avatar">
+    <div class="popup__container">
+        <button aria-label="Закрыть" class="popup__close-btn" type="button"></button>
+        <form class="form" action="/" method="post" name="edit-avatar" novalidate>
+            <h2 class="form__title">Обновить аватар</h2>
+            <input class="form__input" type="url" name="avatar-url" id="avatar-url"
+                   value="" placeholder="Ссылка на картинку" required>
+            <span class="form__error form__error_type_avatar-url"></span>
+            <button class="form__submit-btn form__submit-btn_disabled" type="submit">Сохранить</button>
+        </form>
+    </div>
+</div>
+
 <div class="popup popup_type_image">
     <div class="popup__container">
         <button aria-label="Закрыть" class="popup__close-btn" type="button"></button>
@@ -77,7 +94,7 @@
         <img class="card__image">
         <div class="card__caption">
             <h2 class="card__title"></h2>
-            <button aria-label="Поставить лайк" class="card__like-btn" type="button"></button>
+            <button aria-label="Поставить лайк" class="card__like-btn" type="button"><span class="card__like-counter"></span></button>
         </div>
     </div>
 </template>

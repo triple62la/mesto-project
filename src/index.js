@@ -6,7 +6,7 @@ import {closePopup, openPopup} from "./components/modal.js";
 import './pages/index.css';
 import {
     addBtn, addForm,
-    addPopup, addSbmtBtn,
+    addPopup, addSbmtBtn, avatarForm, avatarImage, avatarInput, avatarModal, avatarOverlay, avatarSbmtBtn,
     cardsGrid,
     descriptionInput,
     editBtn, editForm,
@@ -15,11 +15,8 @@ import {
     profileDescription,
     profileName
 } from "./components/utils";
-import initialCards from "./components/cards";
-import {addNewCard, getCards, getUserInfo, setUserInfo} from "./components/api";
+import {addNewCard, getCards, getUserInfo, setUserInfo, updateAvatar} from "./components/api";
 
-
-let CARDS; //храним массив с карточками
 
 
 function loadResources(){
@@ -30,9 +27,19 @@ function loadResources(){
 function onloadCreateCards(cardsArray, userID) {
     for (const card of cardsArray) {
         const trash = userID === card?.owner?.["_id"] ?? false
-        const cardNode = createNewCard(card.name, card.link, true, trash);
+        const liked = isLikedByUser(card, userID)
+        const cardNode = createNewCard( card,{ trash, liked} );
         cardsGrid.append(cardNode);
     }
+}
+
+function isLikedByUser(cardObj,userId){
+    for (const like of cardObj.likes){
+        if (like["_id"] === userId){
+            return true
+        }
+    }
+    return false
 }
 
 function connectListeners(){
@@ -71,13 +78,17 @@ function connectListeners(){
     addPopup.addEventListener("submit", (evnt) => {
         evnt.preventDefault();
         const [name, link] = [placeTitle.value, imageUrl.value]
+        addSbmtBtn.innerText = "Создание..."
         addNewCard(name, link)
-            .then(()=>{
-                const cardNode = createNewCard(name, link, true, true);
+            .then((response)=>{
+                console.log(response)
+                const cardNode = createNewCard(response, {trash : true, liked: false});
                 cardsGrid.prepend(cardNode);
+                addSbmtBtn.innerText = "Создать"
                 addForm.reset()
             })
             .catch(reason=>{
+                addSbmtBtn.innerText = "Создать"
                 console.error(reason)
             })
     });
@@ -91,6 +102,23 @@ function connectListeners(){
         openPopup(addPopup)
 
     });
+    avatarOverlay.addEventListener("click", ()=>openPopup(avatarModal))
+    avatarForm.addEventListener("submit", (evt)=>{
+        evt.preventDefault()
+        const url = avatarInput.value
+        avatarSbmtBtn.innerText = "Сохранение..."
+        updateAvatar(url)
+            .then(()=>{
+                avatarSbmtBtn.innerText = "Сохранить"
+                avatarImage.src = url
+                closePopup(avatarModal)
+        })
+            .catch(reason => {
+                avatarSbmtBtn.innerText = "Сохранить"
+                console.error(reason)
+                closePopup(avatarModal)
+            })
+    })
 }
 function renderUserInfo(name, about){
     profileName.innerText = name;
@@ -98,13 +126,13 @@ function renderUserInfo(name, about){
 }
 
 
-
-// onloadCreateCards(initialCards);
-
-loadResources().then((results)=>{
+loadResources()
+    .then((results)=>{
     const [userInfo, cardsArray] = results
+    avatarImage.src = userInfo.avatar
     onloadCreateCards(cardsArray, userInfo["_id"])
     renderUserInfo(userInfo.name, userInfo.about)
     connectListeners()
     enableValidation(cssClasses)
 })
+    .catch(()=>console.error("Ошибка загрузки ресурсов с сервера"))

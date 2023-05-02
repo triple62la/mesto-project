@@ -1,8 +1,12 @@
-.profile__avatar{
+.profile__avatar-img{
     display: block;
     width:120px;
     height: 120px;
     object-fit: contain;
     object-position: center;
     border-radius: 50%;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
