@@ -6,7 +6,7 @@ import {closePopup, openPopup} from "../components/modal.js";
 import './index.css';
 import {
     addBtn, addForm,
-    addPopup, addSbmtBtn, avatarForm, avatarImage, avatarInput, avatarModal, avatarOverlay, avatarSbmtBtn,
+    addPopup, addSbmtBtn, avatarForm, avatarImage, avatarInput, avatarPopup, avatarOverlay, avatarSbmtBtn,
     cardsGrid,
     descriptionInput,
     editBtn, editForm,
@@ -82,7 +82,6 @@ function connectListeners(){
             .then((response)=>{
                 const cardNode = createNewCard(response, {trash : true, liked: false});
                 cardsGrid.prepend(cardNode);
-                addSbmtBtn.innerText = "Создать"
                 addForm.reset()
                 closePopup(addPopup)
             })
@@ -101,16 +100,21 @@ function connectListeners(){
         openPopup(addPopup)
 
     });
-    avatarOverlay.addEventListener("click", ()=>openPopup(avatarModal))
+    avatarOverlay.addEventListener("click", ()=>{
+        avatarForm.reset()
+        resetValidationErrors(avatarForm, cssClasses)
+        btnSetDisabled(avatarSbmtBtn, true, cssClasses)
+        openPopup(avatarPopup)
+    })
     avatarForm.addEventListener("submit", (evt)=>{
         evt.preventDefault()
         const url = avatarInput.value
         avatarSbmtBtn.innerText = "Сохранение..."
         updateAvatar(url)
             .then(()=>{
-                avatarSbmtBtn.innerText = "Сохранить"
                 avatarImage.src = url
-                closePopup(avatarModal)
+                avatarForm.reset()
+                closePopup(avatarPopup)
         })
             .catch(reason => {
                 console.error(reason)
