@@ -66,13 +66,12 @@ function connectListeners(){
         setUserInfo(name, about)
             .then(()=>{
                 renderUserInfo(name, about)
-                editSubmtBtn.innerText = "Сохранить"
                 closePopup(editPopup);
             })
             .catch((reason)=>{
                 console.error(reason)
-                editSubmtBtn.innerText = "Сохранить"
             })
+            .finally(()=>editSubmtBtn.innerText = "Сохранить")
     });
 
     addPopup.addEventListener("submit", (evnt) => {
@@ -81,16 +80,16 @@ function connectListeners(){
         addSbmtBtn.innerText = "Создание..."
         addNewCard(name, link)
             .then((response)=>{
-                console.log(response)
                 const cardNode = createNewCard(response, {trash : true, liked: false});
                 cardsGrid.prepend(cardNode);
                 addSbmtBtn.innerText = "Создать"
                 addForm.reset()
+                closePopup(addPopup)
             })
             .catch(reason=>{
-                addSbmtBtn.innerText = "Создать"
                 console.error(reason)
             })
+            .finally(()=>addSbmtBtn.innerText = "Создать")
     });
 
 
@@ -114,25 +113,25 @@ function connectListeners(){
                 closePopup(avatarModal)
         })
             .catch(reason => {
-                avatarSbmtBtn.innerText = "Сохранить"
                 console.error(reason)
-                closePopup(avatarModal)
             })
+            .finally(()=> avatarSbmtBtn.innerText = "Сохранить")
     })
 }
 function renderUserInfo(name, about){
     profileName.innerText = name;
     profileDescription.innerText = about;
+
 }
 
 
 loadResources()
     .then((results)=>{
-    const [userInfo, cardsArray] = results
-    avatarImage.src = userInfo.avatar
-    onloadCreateCards(cardsArray, userInfo["_id"])
-    renderUserInfo(userInfo.name, userInfo.about)
-    connectListeners()
-    enableValidation(cssClasses)
+        const [userInfo, cardsArray] = results
+        onloadCreateCards(cardsArray, userInfo["_id"])
+        renderUserInfo(userInfo.name, userInfo.about)
+        avatarImage.src = userInfo.avatar
+        connectListeners()
+        enableValidation(cssClasses)
 })
-    .catch(()=>console.error("Ошибка загрузки ресурсов с сервера"))
+    .catch(reason=>console.error(`Ошибка загрузки ресурсов с сервера: ${reason}`))
