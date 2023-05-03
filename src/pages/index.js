@@ -1,9 +1,9 @@
 "use strict";
 
-import {createNewCard} from "./components/card.js";
-import {enableValidation, cssClasses, resetValidationErrors, btnSetDisabled} from "./components/validation.js";
-import {closePopup, openPopup} from "./components/modal.js";
-import './pages/index.css';
+import {createNewCard} from "../components/card.js";
+import {enableValidation, cssClasses, resetValidationErrors, btnSetDisabled} from "../components/validation.js";
+import {closePopup, openPopup} from "../components/modal.js";
+import './index.css';
 import {
     addBtn, addForm,
     addPopup, addSbmtBtn, avatarForm, avatarImage, avatarInput, avatarModal, avatarOverlay, avatarSbmtBtn,
@@ -14,8 +14,8 @@ import {
     nameInput, placeTitle, popupCloseBtns,
     profileDescription,
     profileName
-} from "./components/utils";
-import {addNewCard, getCards, getUserInfo, setUserInfo, updateAvatar} from "./components/api";
+} from "../components/utils";
+import {addNewCard, getCards, getUserInfo, setUserInfo, updateAvatar} from "../components/api";
 
 
 
